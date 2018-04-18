@@ -1,10 +1,14 @@
 var initLocations = [
-          {title: 'Old Settlers Park Disc Golf', position: {lat: 330.5410321, lng: -97.62581109999999}},
-          {title: 'Cat Hollow Disc Golf', position: {lat: 30.5064047, lng: -97.7304463}},
-          {title: 'Falcon Pointe Disc Golf Course', position: {lat: 30.458378, lng: -97.5849549}},
-          {title: 'Wells Branch Disc Golf Course', position: {lat: 30.4342523, lng: -97.6712814}},
-          {title: 'Williamson County Disc Golf Course', position: {lat: 30.561017, lng: -97.7669112}},
-          {title: 'San Gabriel Disc Golf Course', position: {lat: 30.6332618, lng: -97.6779842}}
+          {title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a'},
+          {title: 'Cat Hollow Disc Golf', position: {lat: 30.5064047, lng: -97.7304463}, FSID: '4c13eb38a9c220a17faa569d'},
+          {title: 'Falcon Pointe Disc Golf Course', position: {lat: 30.458378, lng: -97.5849549}, FSID: '4cafa62c1463a143934b96a9'},
+          {title: 'Wells Branch Disc Golf Course', position: {lat: 30.4342523, lng: -97.6712814}, FSID:'4ce72ffd8ef78cfa54b9919b'},
+          {title: 'Williamson County Disc Golf Course', position: {lat: 30.561017, lng: -97.7669112}, FSID: '4bc0eaf0461576b0880d7b32'},
+          {title: 'San Gabriel Disc Golf Course', position: {lat: 30.6332618, lng: -97.6779842}, FSID: '4aee1fb8f964a5204dd221e3'},
+          {title: 'Rivery Park Disc Golf Course', position: {lat: 30.5282057, lng: -97.6925576}, FSID: '4cb60ad764998cfa4d6912a2'},
+          {title: 'Bartholemews Disc Golf Course', position: {lat: 30.2967083, lng: -97.6895933}, FSID: '4f416feee4b0c868de8c7416'},
+          {title: 'MaryMoore Searight Metro Disc Golf Course', position: {lat: 30.2578349, lng: -97.7499692}, FSID: '4d7baad5ea35236a0ad34923'},
+          {title: 'Zilker Park Disc Golf Course', position: {lat: 30.2967083, lng: -97.8676655}, FSID: '4bbf8c4274a9a59378a4cef6'}
         ];
 
 
@@ -13,7 +17,7 @@ var map;
 function initMap() {
    map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 30.5082551, lng: -97.67889599999999},
-          zoom: 11,
+          zoom: 10,
           mapTypeControl: false
         });
         ko.applyBindings(new ViewModel());
@@ -58,6 +62,7 @@ var ViewModel = function() {
     var marker = new google.maps.Marker({
       position: locationItem.position,
       title: locationItem.title,
+      id: locationItem.FSID,
       animation: google.maps.Animation.DROP,
       icon: defaultIcon,
       map: map
@@ -102,6 +107,29 @@ function populateInfoWindow(marker, infowindow) {
     });
     var streetViewService = new google.maps.StreetViewService();
     var radius = 50;
+
+    //Foursquare implementation
+    var clientID = '1TTRU30VHJFEHTQIAHSEOCJAMFT5AIC0MVYQ54ONFD1UXVEJ';
+    var clientSecret = 'Y1KF2YQECOFMW3CBMWQEZ35FDP1AOFX0S1F2NF3JDJ0FNTXG';
+    var version ='20180417';
+    var venueID = marker.id;
+    var foursquareURL = 'https://api.foursquare.com/v2/venues/'+ venueID +'?&client_id='+ clientID +'&client_secret='+ clientSecret +'&v='+ version;
+
+    $.getJSON(foursquareURL, function(data) {
+      var venueLike = data.response.venue.likes.count;
+      var venueRating = data.response.venue.rating;
+      var fsUrl = data.response.venue.canonicalUrl;
+
+      marker.setIcon(highlightedIcon);
+      infowindow.setContent('<div id="markerTitle">'+ marker.title +'</div><br><div>From Foursquare: <strong>'+ venueLike +'</strong> people have liked this location and it has been rated <strong>'+ venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +'" target="_blank">Check out this spot on Foursquare</a></div>');
+      infowindow.open(map, marker);
+
+    }).fail(function() {alert('Foursquare could not be loaded...');});
+
+
+  this.currentLocation = function(location) {
+    google.maps.event.trigger(this.marker, 'click');
+  };
           // In case the status is OK, which means the pano was found, compute the
           // position of the streetview image, then calculate the heading, then get a
           // panorama from that and set the options
