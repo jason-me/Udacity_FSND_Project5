@@ -11,6 +11,11 @@
         <div class="filter">
             <h3 id="filterHeader">Filter on:</h3>
             <label><input type="radio" name="category" checked value="all" data-bind="checked: selectedCategory" /> All</label><br>
+            <label><input type="radio" name="category" value="1" data-bind="checked: selectedCategory" /> 1</label><br>
+            <label><input type="radio" name="category" value="2" data-bind="checked: selectedCategory" /> 2</label><br>
+            <label><input type="radio" name="category" value="3" data-bind="checked: selectedCategory" /> 3</label><br>
+            <label><input type="radio" name="category" value="4" data-bind="checked: selectedCategory" /> 4</label><br>
+            <label><input type="radio" name="category" value="5" data-bind="checked: selectedCategory" /> 5</label><br>
         </div><br>
 
         <div id="listContainer">
@@ -20,8 +25,10 @@
         </div>
 
 </div>
+    <div class="mapContainer">
     <div id="map"></div>
-  </div>
+    </div>
+</div>
     <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCB2vFmdjvFknoGHf2LxAtFPp-SvU1bIGg&v=3&callback=initMap" onerror="googleError()">
     </script>
     <script src="bower_components/knockout-3.4.2.js" defer></script>

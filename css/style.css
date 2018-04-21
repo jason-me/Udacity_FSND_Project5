@@ -7,10 +7,21 @@
       }
       #map {
         height: 100%;
+        width: 100%;
+        position: absolute;
       }
       .container {
         height: 100%;
         position: relative;
+}
+.mapContainer {
+  top: 50px;
+  height: 800px;
+  left: 250px;
+  position: absolute;
+  right: 0px;
+  overflow: hidden;
+}
       }
       input {
         font-size: 12px;
@@ -21,38 +32,49 @@
         margin: 0 0 10px 0;
         text-align: center;
       }
-      #hide-listings,
-      #show-listings {
-        width: 48%;
-      }
       hr {
         background: #D0D7D9;
         height: 1px;
         margin: 20px 0 20px 0;
         border: none;
       }
-      #pano {
-        width: 200px;
-        height: 200px;
-      }
-      #search-within-time-text {
-        width: 84%;
-      }
-      .text {
+
+    #filterHeader {
+      font: 500 18px/1.5 Helvetica, Verdana, sans-serif;
+    }
+
+    .filter {
+      font: 200 18px/1 Helvetica, Verdana, sans-serif;
+    }
+
+    #listContainer {
+      height: 100%;
+      left: 0px;
+      position: absolute;
+      right: 0px;
+      max-width: 200px;
+    }
+      } .text {
         font-size: 12px;
       }
-      #toggle-drawing {
-        width: 27%;
-        position: relative;
-        margin-left: 10px;
-      }
-      #zoom-to-area-text {
-        width: 70%;
-      }
-      #zoom-to-area {
-        width: 24%;
       }
       #places-search{
         width: 84%;
       }
+      @media screen and (max-width: 300px) {
+  #name {
+    font-size: 16px;
+  }
+  .filter {
+    font-size: 14px;
+  }
+  li {
+    font-size: 14px;
+  }
+  li a:hover {
+    font-size: 16px;
+  }
+  .mapContainer {
+    left: 170px;
+  }
 }
