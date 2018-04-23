@@ -1,3 +1,4 @@
+//Begin View in MVVM
 var initLocations = [
           {category: '1', title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a'},
           {category: '1', title: 'Cat Hollow Disc Golf', position: {lat: 30.5064047, lng: -97.7304463}, FSID: '4c13eb38a9c220a17faa569d'},
@@ -11,6 +12,7 @@ var initLocations = [
           {category: '5', title: 'Zilker Park Disc Golf Course', position: {lat: 30.2967083, lng: -97.8676655}, FSID: '4bbf8c4274a9a59378a4cef6'}
         ];
 
+//Build location object
 var Location = function(data) {
   this.title = ko.observable(data.title);
   this.position = ko.observable(data.position);
@@ -18,8 +20,8 @@ var Location = function(data) {
   this.marker = data.marker;
 };
 
+//Initialize Google Map and View Model
 var map;
-
 function initMap() {
    map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 30.5082551, lng: -97.67889599999999},
@@ -29,27 +31,30 @@ function initMap() {
         ko.applyBindings(new ViewModel());
 }
 
-
+//Google maps error handling
 function googleError() {
   alert("Google Maps could not be loaded.");
 }
 
 var ViewModel = function() {
   var self = this;
-
+  //Initialize locationList using Location object
   this.locationList = ko.observableArray([]);
-
+  //Initialize infoWindow
   var infoWindow = new google.maps.InfoWindow();
-
+  //Create default icon
   var defaultIcon = makeMarkerIcon('0091ff');
-        // Create a "highlighted location" marker color.
+  //Create a "highlightedIcon" marker color.
   var highlightedIcon = makeMarkerIcon('FFFF24');
 
+  //Utilize forEach binding to iterate over an arracy in KO
+  //http://knockoutjs.com/documentation/foreach-binding.html
   initLocations.forEach(function(locationItem){
     var marker = new google.maps.Marker({
       position: locationItem.position,
       title: locationItem.title,
       id: locationItem.FSID,
+      category: locationItem.category,
       animation: google.maps.Animation.DROP,
       icon: defaultIcon,
       map: map
@@ -63,7 +68,6 @@ var ViewModel = function() {
     //Clicking on marker animates bounce or cancels bounce animation
     //https://developers.google.com/maps/documentation/javascript/examples/marker-animations
     locationItem.marker.addListener('click', toggleBounce);
-
       function toggleBounce() {
         if (marker.getAnimation() !== null) {
           marker.setAnimation(null);
@@ -72,20 +76,19 @@ var ViewModel = function() {
         }
       }
 
-
-
     self.locationList.push(new Location(locationItem));
   });
 
-  this.currentLocation = ko.observable(this.locationList()[0]);
-
-  self.selectedCategory = ko.observable('all');
-
-
-  self.filteredLocations = ko.computed(function() {
+//Initialize currentLocation binding in KO
+//http://knockoutjs.com/documentation/custom-bindings.html
+this.currentLocation = ko.observable(this.locationList()[0]);
+//Create selectedCategory binding in KO
+self.selectedCategory = ko.observable('all');
+//Create filteredlocations binding in KO
+self.filteredLocations = ko.computed(function() {
     var selectedCategory = self.selectedCategory().toLowerCase();
 
-    // If the 'All' category is selected, shows all listings and markers.
+    //Shows all list items and markers when selected
     if (selectedCategory === 'all') {
       self.locationList().forEach(function(location) {
         if (location.marker) {
@@ -95,7 +98,7 @@ var ViewModel = function() {
       return self.locationList();
     }
 
-    // Else if a category is selected, filters the list and markers.
+    //Filters the list and markers selected.
     return ko.utils.arrayFilter(self.locationList(), function(location) {
       var category = location.category().toLowerCase();
       var match = category === selectedCategory;
@@ -111,6 +114,7 @@ var ViewModel = function() {
     });
 });
 
+//Google API function to set marker color and size.
 function makeMarkerIcon(markerColor) {
   var markerImage = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
@@ -128,10 +132,10 @@ function setMarkersDefault() {
   });
 }
 
+//Populate infowindow with content
 function populateInfoWindow(marker, infowindow) {
-        // Check to make sure the infowindow is not already opened on this marker.
 
-    //Foursquare implementation
+    //Foursquare API implementation
     var clientID = '1TTRU30VHJFEHTQIAHSEOCJAMFT5AIC0MVYQ54ONFD1UXVEJ';
     var clientSecret = 'Y1KF2YQECOFMW3CBMWQEZ35FDP1AOFX0S1F2NF3JDJ0FNTXG';
     var version ='20180417';
@@ -139,34 +143,27 @@ function populateInfoWindow(marker, infowindow) {
     var foursquareURL = 'https://api.foursquare.com/v2/venues/'+ venueID +'?&client_id='+ clientID +'&client_secret='+ clientSecret +'&v='+ version;
 
 
-//Load JSON-encoded data from the server using a GET HTTP Ajaxrequest.
+    //Load JSON-encoded data from the server using a GET HTTP Ajaxrequest.
+    //http://api.jquery.com/jQuery.getJSON/
     $.getJSON(foursquareURL, function(data) {
       var venueLike = data.response.venue.likes.count;
       var venueRating = data.response.venue.rating;
       var fsUrl = data.response.venue.canonicalUrl;
 
+      //Injects foursquare API content into HTML page
       marker.setIcon(highlightedIcon);
       infowindow.setContent('<div id="markerTitle">'+ marker.title +'</div><br><div>From Foursquare: <strong>'+ venueLike +'</strong> people have liked this location and it has been rated <strong>'+ venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +'" target="_blank">Check out this spot on Foursquare</a></div><br><div>(Click icon to reset animation)</div>');
       infowindow.open(map, marker);
 
+    //Foursquare error handling
     }).fail(function() {alert('Foursquare could not be loaded...');});
   }
 
+  //Connects location to the marker
   this.currentLocation = function(location) {
     google.maps.event.trigger(this.marker, 'click');
   };
 
 };
-
-  //this.currentLocation = ko.observable( this.locationList()[0] );
-  // increment the counter
-  //this.incrementCounter = function(){
-    //self.currentCat().clickCount(self.currentCat().clickCount() + 1);
-    // console.log(this.clickCount());
-  //};
-
-  //this.setLocation = function(clickedLocation) {
-      //self.currentLocation(clickedLocation);
-  //};
 
 

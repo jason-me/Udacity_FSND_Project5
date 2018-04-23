@@ -8,6 +8,10 @@
 <body>
         <div>
         <h1 id="name">Disc Golf Spots Around Town</h1>
+        <div class="search-bar">
+            <input placeholder="search for popular places">
+            <button class="search-button">Search</button>
+        </div>
         <div class="filter">
             <h3 id="filterHeader">Filter on:</h3>
             <label><input type="radio" name="category" checked value="all" data-bind="checked: selectedCategory" /> All</label><br>
@@ -17,14 +21,11 @@
             <label><input type="radio" name="category" value="4" data-bind="checked: selectedCategory" /> 4</label><br>
             <label><input type="radio" name="category" value="5" data-bind="checked: selectedCategory" /> 5</label><br>
         </div><br>
-
         <div id="listContainer">
             <ul data-bind="foreach: filteredLocations">
                 <li><a href="#" data-bind="text: title, click: $root.currentLocation"></a></li>
             </ul>
         </div>
-
-</div>
     <div class="mapContainer">
     <div id="map"></div>
     </div>
