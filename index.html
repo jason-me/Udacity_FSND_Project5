@@ -13,13 +13,12 @@
             <button class="search-button">Search</button>
         </div>
         <div class="filter">
-            <h3 id="filterHeader">Filter on:</h3>
-            <label><input type="radio" name="category" checked value="all" data-bind="checked: selectedCategory" /> All</label><br>
-            <label><input type="radio" name="category" value="1" data-bind="checked: selectedCategory" /> 1</label><br>
-            <label><input type="radio" name="category" value="2" data-bind="checked: selectedCategory" /> 2</label><br>
-            <label><input type="radio" name="category" value="3" data-bind="checked: selectedCategory" /> 3</label><br>
-            <label><input type="radio" name="category" value="4" data-bind="checked: selectedCategory" /> 4</label><br>
-            <label><input type="radio" name="category" value="5" data-bind="checked: selectedCategory" /> 5</label><br>
+            <h3 id="filterHeader">Locations Near:</h3>
+            <label><input type="radio" name="city" checked value="all" data-bind="checked: selectedCity" /> All</label><br>
+            <label><input type="radio" name="city" value="round rock" data-bind="checked: selectedCity" /> Round Rock</label><br>
+            <label><input type="radio" name="city" value="georgetown" data-bind="checked: selectedCity" /> Georgetown</label><br>
+            <label><input type="radio" name="city" value="pflugerville" data-bind="checked: selectedCity" /> Pflugerville</label><br>
+            <label><input type="radio" name="city" value="austin" data-bind="checked: selectedCity" /> Austin</label><br>
         </div><br>
         <div id="listContainer">
             <ul data-bind="foreach: filteredLocations">

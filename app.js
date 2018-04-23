@@ -1,22 +1,22 @@
 //Begin View in MVVM
 var initLocations = [
-          {category: '1', title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a'},
-          {category: '1', title: 'Cat Hollow Disc Golf', position: {lat: 30.5064047, lng: -97.7304463}, FSID: '4c13eb38a9c220a17faa569d'},
-          {category: '2', title: 'Falcon Pointe Disc Golf Course', position: {lat: 30.458378, lng: -97.5849549}, FSID: '4cafa62c1463a143934b96a9'},
-          {category: '2', title: 'Wells Branch Disc Golf Course', position: {lat: 30.4342523, lng: -97.6712814}, FSID:'4ce72ffd8ef78cfa54b9919b'},
-          {category: '3', title: 'Williamson County Disc Golf Course', position: {lat: 30.561017, lng: -97.7669112}, FSID: '4bc0eaf0461576b0880d7b32'},
-          {category: '3', title: 'San Gabriel Disc Golf Course', position: {lat: 30.6332618, lng: -97.6779842}, FSID: '4aee1fb8f964a5204dd221e3'},
-          {category: '4', title: 'Rivery Park Disc Golf Course', position: {lat: 30.5282057, lng: -97.6925576}, FSID: '4cb60ad764998cfa4d6912a2'},
-          {category: '4', title: 'Bartholemews Disc Golf Course', position: {lat: 30.2967083, lng: -97.6895933}, FSID: '4f416feee4b0c868de8c7416'},
-          {category: '5', title: 'MaryMoore Searight Metro Disc Golf Course', position: {lat: 30.2578349, lng: -97.7499692}, FSID: '4d7baad5ea35236a0ad34923'},
-          {category: '5', title: 'Zilker Park Disc Golf Course', position: {lat: 30.2967083, lng: -97.8676655}, FSID: '4bbf8c4274a9a59378a4cef6'}
+          {title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a', city: 'round rock'},
+          {title: 'Cat Hollow Disc Golf', position: {lat: 30.5064047, lng: -97.7304463}, FSID: '4c13eb38a9c220a17faa569d', city: 'round rock'},
+          {title: 'Falcon Pointe Disc Golf Course', position: {lat: 30.458378, lng: -97.5849549}, FSID: '4cafa62c1463a143934b96a9', city: 'pflugerville'},
+          {title: 'Wells Branch Disc Golf Course', position: {lat: 30.4342523, lng: -97.6712814}, FSID:'4ce72ffd8ef78cfa54b9919b', city: 'austin'},
+          {title: 'Williamson County Disc Golf Course', position: {lat: 30.561017, lng: -97.7669112}, FSID: '4bc0eaf0461576b0880d7b32', city: 'round rock'},
+          {title: 'San Gabriel Disc Golf Course', position: {lat: 30.6332618, lng: -97.6779842}, FSID: '4aee1fb8f964a5204dd221e3', city: 'georgetown'},
+          {title: 'Rivery Park Disc Golf Course', position: {lat: 30.5282057, lng: -97.6925576}, FSID: '4cb60ad764998cfa4d6912a2', city: 'georgetown'},
+          {title: 'Bartholemews Disc Golf Course', position: {lat: 30.2967083, lng: -97.6895933}, FSID: '4f416feee4b0c868de8c7416', city: 'austin'},
+          {title: 'MaryMoore Searight Metro Disc Golf Course', position: {lat: 30.2578349, lng: -97.7499692}, FSID: '4d7baad5ea35236a0ad34923', city: 'austin'},
+          {title: 'Zilker Park Disc Golf Course', position: {lat: 30.2967083, lng: -97.8676655}, FSID: '4bbf8c4274a9a59378a4cef6', city: 'austin'}
         ];
 
 //Build location object
 var Location = function(data) {
   this.title = ko.observable(data.title);
   this.position = ko.observable(data.position);
-  this.category = ko.observable(data.category);
+  this.city = ko.observable(data.city);
   this.marker = data.marker;
 };
 
@@ -54,7 +54,7 @@ var ViewModel = function() {
       position: locationItem.position,
       title: locationItem.title,
       id: locationItem.FSID,
-      category: locationItem.category,
+      city: locationItem.city,
       animation: google.maps.Animation.DROP,
       icon: defaultIcon,
       map: map
@@ -82,14 +82,14 @@ var ViewModel = function() {
 //Initialize currentLocation binding in KO
 //http://knockoutjs.com/documentation/custom-bindings.html
 this.currentLocation = ko.observable(this.locationList()[0]);
-//Create selectedCategory binding in KO
-self.selectedCategory = ko.observable('all');
+//Create selectedCity binding in KO
+self.selectedCity = ko.observable('all');
 //Create filteredlocations binding in KO
 self.filteredLocations = ko.computed(function() {
-    var selectedCategory = self.selectedCategory().toLowerCase();
+    var selectedCity = self.selectedCity().toLowerCase();
 
     //Shows all list items and markers when selected
-    if (selectedCategory === 'all') {
+    if (selectedCity === 'all') {
       self.locationList().forEach(function(location) {
         if (location.marker) {
           location.marker.setVisible(true);
@@ -100,10 +100,10 @@ self.filteredLocations = ko.computed(function() {
 
     //Filters the list and markers selected.
     return ko.utils.arrayFilter(self.locationList(), function(location) {
-      var category = location.category().toLowerCase();
-      var match = category === selectedCategory;
+      var city = location.city().toLowerCase();
+      var match = city === selectedCity;
       self.locationList().forEach(function(location) {
-        if (location.category() === selectedCategory) {
+        if (location.city() === selectedCity) {
           location.marker.setVisible(true);
         } else {
           location.marker.setVisible(false);
