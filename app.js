@@ -1,15 +1,15 @@
 //Begin View in MVVM
 var initLocations = [
-          {title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a', city: 'round rock'},
-          {title: 'Cat Hollow Disc Golf', position: {lat: 30.5064047, lng: -97.7304463}, FSID: '4c13eb38a9c220a17faa569d', city: 'round rock'},
-          {title: 'Falcon Pointe Disc Golf Course', position: {lat: 30.458378, lng: -97.5849549}, FSID: '4cafa62c1463a143934b96a9', city: 'pflugerville'},
-          {title: 'Wells Branch Disc Golf Course', position: {lat: 30.4342523, lng: -97.6712814}, FSID:'4ce72ffd8ef78cfa54b9919b', city: 'austin'},
-          {title: 'Williamson County Disc Golf Course', position: {lat: 30.561017, lng: -97.7669112}, FSID: '4bc0eaf0461576b0880d7b32', city: 'round rock'},
-          {title: 'San Gabriel Disc Golf Course', position: {lat: 30.6332618, lng: -97.6779842}, FSID: '4aee1fb8f964a5204dd221e3', city: 'georgetown'},
-          {title: 'Rivery Park Disc Golf Course', position: {lat: 30.5282057, lng: -97.6925576}, FSID: '4cb60ad764998cfa4d6912a2', city: 'georgetown'},
-          {title: 'Bartholemews Disc Golf Course', position: {lat: 30.2967083, lng: -97.6895933}, FSID: '4f416feee4b0c868de8c7416', city: 'austin'},
-          {title: 'MaryMoore Searight Metro Disc Golf Course', position: {lat: 30.2578349, lng: -97.7499692}, FSID: '4d7baad5ea35236a0ad34923', city: 'austin'},
-          {title: 'Zilker Park Disc Golf Course', position: {lat: 30.2967083, lng: -97.8676655}, FSID: '4bbf8c4274a9a59378a4cef6', city: 'austin'}
+          {title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a', city: 'round rock', show: true},
+          {title: 'Cat Hollow Disc Golf', position: {lat: 30.5064047, lng: -97.7304463}, FSID: '4c13eb38a9c220a17faa569d', city: 'round rock', show: true},
+          {title: 'Falcon Pointe Disc Golf Course', position: {lat: 30.458378, lng: -97.5849549}, FSID: '4cafa62c1463a143934b96a9', city: 'pflugerville', show: true},
+          {title: 'Wells Branch Disc Golf Course', position: {lat: 30.4342523, lng: -97.6712814}, FSID:'4ce72ffd8ef78cfa54b9919b', city: 'austin', show: true},
+          {title: 'Williamson County Disc Golf Course', position: {lat: 30.561017, lng: -97.7669112}, FSID: '4bc0eaf0461576b0880d7b32', city: 'round rock', show: true},
+          {title: 'San Gabriel Disc Golf Course', position: {lat: 30.6332618, lng: -97.6779842}, FSID: '4aee1fb8f964a5204dd221e3', city: 'georgetown', show: true},
+          {title: 'Rivery Park Disc Golf Course', position: {lat: 30.5282057, lng: -97.6925576}, FSID: '4cb60ad764998cfa4d6912a2', city: 'georgetown', show: true},
+          {title: 'Bartholemews Disc Golf Course', position: {lat: 30.2967083, lng: -97.6895933}, FSID: '4f416feee4b0c868de8c7416', city: 'austin', show: true},
+          {title: 'MaryMoore Searight Metro Disc Golf Course', position: {lat: 30.2578349, lng: -97.7499692}, FSID: '4d7baad5ea35236a0ad34923', city: 'austin', show: true},
+          {title: 'Zilker Park Disc Golf Course', position: {lat: 30.2967083, lng: -97.8676655}, FSID: '4bbf8c4274a9a59378a4cef6', city: 'austin', show: true}
         ];
 
 //Build location object
@@ -18,6 +18,7 @@ var Location = function(data) {
   this.position = ko.observable(data.position);
   this.city = ko.observable(data.city);
   this.marker = data.marker;
+  this.show = ko.observable(data.show);
 };
 
 //Initialize Google Map and View Model
@@ -47,7 +48,7 @@ var ViewModel = function() {
   //Create a "highlightedIcon" marker color.
   var highlightedIcon = makeMarkerIcon('FFFF24');
 
-  //Utilize forEach binding to iterate over an arracy in KO
+  //Utilize forEach binding to iterate over an array in KO
   //http://knockoutjs.com/documentation/foreach-binding.html
   initLocations.forEach(function(locationItem){
     var marker = new google.maps.Marker({
@@ -56,6 +57,7 @@ var ViewModel = function() {
       id: locationItem.FSID,
       city: locationItem.city,
       animation: google.maps.Animation.DROP,
+      show: locationItem.show,
       icon: defaultIcon,
       map: map
     });
@@ -131,6 +133,52 @@ function setMarkersDefault() {
     locationItem.marker.setIcon(defaultIcon);
   });
 }
+
+// filtering procedure
+
+  self.filterText = ko.observable("");
+
+
+  self.searchModifier = function() {
+
+    var activeSearch = self.filterText();
+    infowindow.close();
+    // when no text in filter field
+    if (activeSearch.length === 0) {
+      self.showAllMarkers(true);
+    }
+    else {            //for some filter applied
+      for (marker in self.locationList) {
+        if ( self.locationList[marker].name.toLowerCase().indexOf( activeSearch.toLowerCase()) >= 0 )
+        {
+          self.locationList[marker].show(true);
+          self.locationList[marker].setVisible(true);
+        }
+        else
+        {
+          self.locationList[marker].show(false);
+          self.locationList[marker].setVisible(false);
+        }
+      }
+    }
+    infowindow.close();
+  };
+
+
+  self.showAllMarkers = function(showVar) {
+    for (marker in self.locationList) {
+      self.locationList[marker].show(showVar);
+      self.locationList[marker].setVisible(showVar);
+    }
+  };
+
+
+  self.unselectAll = function() {
+    for (marker in self.locationList) {
+      self.locationList[marker].selected(false);
+    }
+  };
+
 
 //Populate infowindow with content
 function populateInfoWindow(marker, infowindow) {

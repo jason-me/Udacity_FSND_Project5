@@ -8,10 +8,31 @@
 <body>
         <div>
         <h1 id="name">Disc Golf Spots Around Town</h1>
-        <div class="search-bar">
-            <input placeholder="search for popular places">
-            <button class="search-button">Search</button>
-        </div>
+<ul id="slide-out" class="side-nav grey lighten-3">
+        <li>
+            <h4 class="center">Locations</h3>
+    </li>
+        <li class="search">
+            <div class="container">
+                <div class="search-wrapper focus" style="display:flex;">
+                    <input id="search" type="search" list="placeList" class="menu" data-bind="value: filterText, valueUpdate: 'afterkeydown', event: { keyup: searchModifier }">
+                    <label for="search" style="margin-top:4%;"><i class="material-icons">search</i></label>
+                    <div class="search-results"></div>
+                </div>
+            </div>
+
+            <!-- <form>
+                <div class="input-field" id="search">
+                </div>
+            </form> -->
+        </li>
+        <ul class="list-group" data-bind="forEach: locationList">
+            <li class="locationList center">
+                <a class="waves-effect waves-light" href="#" data-bind="text: name, visible: show, click: $parent.selectLocation"></a>
+            </li>
+            <!-- <li><div class="divider"></div></li> -->
+        </ul>
+</ul>
         <div class="filter">
             <h3 id="filterHeader">Locations Near:</h3>
             <label><input type="radio" name="city" checked value="all" data-bind="checked: selectedCity" /> All</label><br>
@@ -21,7 +42,7 @@
             <label><input type="radio" name="city" value="austin" data-bind="checked: selectedCity" /> Austin</label><br>
         </div><br>
         <div id="listContainer">
-            <ul data-bind="foreach: filteredLocations">
+            <ul data-bind="forEach: filteredLocations">
                 <li><a href="#" data-bind="text: title, click: $root.currentLocation"></a></li>
             </ul>
         </div>

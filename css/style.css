@@ -47,6 +47,12 @@
       font: 200 18px/1 Helvetica, Verdana, sans-serif;
     }
 
+}
+
+.input-field input[type=search]:focus {
+  background-color: #f5f5f5 !important;
+}
+
     #listContainer {
       height: 100%;
       left: 0px;
