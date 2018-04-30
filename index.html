@@ -5,14 +5,15 @@
     <title>Disc Golf Near Round Rock</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body><!-- CURRENT WORKING ENVIRONMENT - SUNDAY  APRIL 29, 2018 -->
         <div>
         <h1 id="name">Disc Golf Spots Around Town</h1>
         <div class="search-bar">
-            <input placeholder="search for popular places">
+            <!-- <input id="search" list="placeList" data-bind="value: searchTitle, valueUpdate: 'afterkeydown', event: { keyup: searchModifier }" placeholder="search for popular places"> -->
+            <input id="search" data-bind="value: searchTitle, valueUpdate: 'afterkeydown', event: { keyup: filteredLocations }" placeholder="search for popular places">
             <button class="search-button">Search</button>
         </div>
-        <div class="filter">
+<!--        <div class="filter">
             <h3 id="filterHeader">Locations Near:</h3>
             <label><input type="radio" name="city" checked value="all" data-bind="checked: selectedCity" /> All</label><br>
             <label><input type="radio" name="city" value="round rock" data-bind="checked: selectedCity" /> Round Rock</label><br>
@@ -20,6 +21,7 @@
             <label><input type="radio" name="city" value="pflugerville" data-bind="checked: selectedCity" /> Pflugerville</label><br>
             <label><input type="radio" name="city" value="austin" data-bind="checked: selectedCity" /> Austin</label><br>
         </div><br>
+-->
         <div id="listContainer">
             <ul data-bind="foreach: filteredLocations">
                 <li><a href="#" data-bind="text: title, click: $root.currentLocation"></a></li>

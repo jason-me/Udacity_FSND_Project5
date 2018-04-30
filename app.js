@@ -1,3 +1,4 @@
+// CURRENT WORKING ENVIRONMENT - SUNDAY  APRIL 29, 2018
 //Begin View in MVVM
 var initLocations = [
           {title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a', city: 'round rock'},
@@ -19,6 +20,7 @@ var Location = function(data) {
   this.city = ko.observable(data.city);
   this.marker = data.marker;
 };
+
 
 //Initialize Google Map and View Model
 var map;
@@ -79,86 +81,212 @@ var ViewModel = function() {
     self.locationList.push(new Location(locationItem));
   });
 
-//Initialize currentLocation binding in KO
-//http://knockoutjs.com/documentation/custom-bindings.html
-this.currentLocation = ko.observable(this.locationList()[0]);
-//Create selectedCity binding in KO
-self.selectedCity = ko.observable('all');
-//Create filteredlocations binding in KO
-self.filteredLocations = ko.computed(function() {
-    var selectedCity = self.selectedCity().toLowerCase();
 
-    //Shows all list items and markers when selected
-    if (selectedCity === 'all') {
-      self.locationList().forEach(function(location) {
-        if (location.marker) {
-          location.marker.setVisible(true);
-        }
+  console.log("alpha001");
+  console.log("this ---> " + JSON.stringify(this));
+  console.log("this.locationList = " + JSON.stringify(this.locationList));
+
+  //Initialize currentLocation binding in KO
+  //http://knockoutjs.com/documentation/custom-bindings.html
+  this.currentLocation = ko.observable(this.locationList()[0]);
+
+
+
+  //Create selectedCity binding in KO
+  //self.selectedCity = ko.observable('all');
+
+  self.searchTitle = ko.observable('');
+
+  //Create filteredlocations binding in KO
+  self.filteredLocations = ko.pureComputed(function(){
+
+
+    //debugger;
+
+      console.log("IS THIS GETTING CALLED??? - SELF.FILTEREDLOCATIONS");
+      //var selectedCity = self.selectedCity().toLowerCase();
+      var searchTitle = self.searchTitle().toLowerCase();
+      console.log("searchTitle = [" + searchTitle + "]");
+
+
+      //Shows all list items and markers when selected
+      if (searchTitle === '') {
+        console.log("searchtitle WAS EMPTY STRING");
+        self.locationList().forEach(function(location) {
+          if (location.marker) {
+            location.marker.setVisible(true);
+          }
+        });
+        return self.locationList();
+      }
+
+
+      //Filters the list and markers selected.
+      return ko.utils.arrayFilter(self.locationList(), function(location) {
+        //var city = location.city().toLowerCase();
+        var title = location.title().toLowerCase();
+        var match = title === searchTitle;
+        console.log("SEPARATOR --- TIME:" + new Date());
+        self.locationList().forEach(function(location) {
+          console.log("inside the map marker section --- location.title().toLowerCase() [" + location.title().toLowerCase() + " ]  COMPARED TO searchTitle: [" + searchTitle + "]");
+          if (location.title().toLowerCase() === searchTitle) {
+            location.marker.setVisible(true);
+          } else {
+            location.marker.setVisible(false);
+            infoWindow.close();
+          }
+        });
+        return match;
       });
-      return self.locationList();
+
+
+  });
+
+/*  BACKUP!
+  //Create selectedCity binding in KO
+  self.selectedCity = ko.observable('all');
+
+  //self.searchTitle = ko.observable('');
+
+  //Create filteredlocations binding in KO
+  self.filteredLocations = ko.computed(function() {
+      var selectedCity = self.selectedCity().toLowerCase();
+
+
+      //Shows all list items and markers when selected
+      if (selectedCity === 'all') {
+        self.locationList().forEach(function(location) {
+          if (location.marker) {
+            location.marker.setVisible(true);
+          }
+        });
+        return self.locationList();
+      }
+
+      //Filters the list and markers selected.
+      return ko.utils.arrayFilter(self.locationList(), function(location) {
+        var city = location.city().toLowerCase();
+        var match = city === selectedCity;
+        self.locationList().forEach(function(location) {
+          if (location.city() === selectedCity) {
+            location.marker.setVisible(true);
+          } else {
+            location.marker.setVisible(false);
+            infoWindow.close();
+          }
+        });
+        return match;
+      });
+  });
+
+*/
+
+
+
+  //self.filterText = ko.observable("");
+
+/*
+  self.searchModifier = function() {
+    var activeSearch = self.filterText();
+
+    console.log("Activesearch = " + activeSearch);
+
+    var selectedCity = "";
+
+    if (activeSearch.length === 0) {
+      //self.showAllMarkers(true);
+      selectedCity = "all";
     }
 
-    //Filters the list and markers selected.
-    return ko.utils.arrayFilter(self.locationList(), function(location) {
-      var city = location.city().toLowerCase();
-      var match = city === selectedCity;
-      self.locationList().forEach(function(location) {
-        if (location.city() === selectedCity) {
-          location.marker.setVisible(true);
-        } else {
-          location.marker.setVisible(false);
-          infoWindow.close();
-        }
+
+     //var selectedCity = self.selectedCity().toLowerCase();
+
+      //Shows all list items and markers when selected
+      if (selectedCity === 'all') {
+        self.locationList().forEach(function(location) {
+          if (location.marker) {
+            location.marker.setVisible(true);
+          }
+        });
+        return self.locationList();
+      }
+
+      //Filters the list and markers selected.
+      return ko.utils.arrayFilter(self.locationList(), function(location) {
+        var city = location.city().toLowerCase();
+        var match = city === selectedCity;
+        self.locationList().forEach(function(location) {
+          if (location.city() === selectedCity) {
+            location.marker.setVisible(true);
+          } else {
+            location.marker.setVisible(false);
+            infoWindow.close();
+          }
+        });
+        return match;
       });
-      return match;
-    });
-});
 
-//Google API function to set marker color and size.
-function makeMarkerIcon(markerColor) {
-  var markerImage = new google.maps.MarkerImage(
-    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
-    '|40|_|%E2%80%A2',
-    new google.maps.Size(21, 34),
-    new google.maps.Point(0, 0),
-    new google.maps.Point(10, 34),
-    new google.maps.Size(21,34));
-  return markerImage;
-}
+  };
 
-function setMarkersDefault() {
-  self.locationList().forEach(function(locationItem) {
-    locationItem.marker.setIcon(defaultIcon);
-  });
-}
+  self.showAllMarkers = function(showVar) {
+    for (marker in self.locationList) {
+      self.locationList[marker].show(showVar);
+      self.locationList[marker].setVisible(showVar);
+    }
 
-//Populate infowindow with content
-function populateInfoWindow(marker, infowindow) {
-
-    //Foursquare API implementation
-    var clientID = '1TTRU30VHJFEHTQIAHSEOCJAMFT5AIC0MVYQ54ONFD1UXVEJ';
-    var clientSecret = 'Y1KF2YQECOFMW3CBMWQEZ35FDP1AOFX0S1F2NF3JDJ0FNTXG';
-    var version ='20180417';
-    var venueID = marker.id;
-    var foursquareURL = 'https://api.foursquare.com/v2/venues/'+ venueID +'?&client_id='+ clientID +'&client_secret='+ clientSecret +'&v='+ version;
+  };
+*/
 
 
-    //Load JSON-encoded data from the server using a GET HTTP Ajaxrequest.
-    //http://api.jquery.com/jQuery.getJSON/
-    $.getJSON(foursquareURL, function(data) {
-      var venueLike = data.response.venue.likes.count;
-      var venueRating = data.response.venue.rating;
-      var fsUrl = data.response.venue.canonicalUrl;
-
-      //Injects foursquare API content into HTML page
-      marker.setIcon(highlightedIcon);
-      infowindow.setContent('<div id="markerTitle">'+ marker.title +'</div><br><div>From Foursquare: <strong>'+ venueLike +'</strong> people have liked this location and it has been rated <strong>'+ venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +'" target="_blank">Check out this spot on Foursquare</a></div><br><div>(Click icon to reset animation)</div>');
-      infowindow.open(map, marker);
-
-    //Foursquare error handling
-    }).fail(function() {alert('Foursquare could not be loaded...');});
+  //Google API function to set marker color and size.
+  function makeMarkerIcon(markerColor) {
+    var markerImage = new google.maps.MarkerImage(
+      'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+      '|40|_|%E2%80%A2',
+      new google.maps.Size(21, 34),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(10, 34),
+      new google.maps.Size(21,34));
+    return markerImage;
   }
 
+  function setMarkersDefault() {
+    self.locationList().forEach(function(locationItem) {
+      locationItem.marker.setIcon(defaultIcon);
+    });
+  }
+
+
+  //Populate infowindow with content
+  console.log("populateInfoWindow is about to be declared... clearly this code line is called first though");
+  function populateInfoWindow(marker, infowindow) {
+    console.log("INSIDE populateInfoWindow");
+      //Foursquare API implementation
+      var clientID = '1TTRU30VHJFEHTQIAHSEOCJAMFT5AIC0MVYQ54ONFD1UXVEJ';
+      var clientSecret = 'Y1KF2YQECOFMW3CBMWQEZ35FDP1AOFX0S1F2NF3JDJ0FNTXG';
+      var version ='20180417';
+      var venueID = marker.id;
+      var foursquareURL = 'https://api.foursquare.com/v2/venues/'+ venueID +'?&client_id='+ clientID +'&client_secret='+ clientSecret +'&v='+ version;
+
+
+      //Load JSON-encoded data from the server using a GET HTTP Ajaxrequest.
+      //http://api.jquery.com/jQuery.getJSON/
+      $.getJSON(foursquareURL, function(data) {
+        var venueLike = data.response.venue.likes.count;
+        var venueRating = data.response.venue.rating;
+        var fsUrl = data.response.venue.canonicalUrl;
+
+        //Injects foursquare API content into HTML page
+        marker.setIcon(highlightedIcon);
+        infowindow.setContent('<div id="markerTitle">'+ marker.title +'</div><br><div>From Foursquare: <strong>'+ venueLike +'</strong> people have liked this location and it has been rated <strong>'+ venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +'" target="_blank">Check out this spot on Foursquare</a></div><br><div>(Click icon to reset animation)</div>');
+        infowindow.open(map, marker);
+
+      //Foursquare error handling
+      }).fail(function() {alert('Foursquare could not be loaded...');});
+      console.log("got to the end of the scope of populateInfoWindow............");
+    }
+
+  //console.log("HOW ON EARTH is this even runnning..........");
   //Connects location to the marker
   this.currentLocation = function(location) {
     google.maps.event.trigger(this.marker, 'click');
