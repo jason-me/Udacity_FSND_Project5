@@ -127,7 +127,7 @@ var ViewModel = function() {
       return ko.utils.arrayFilter(self.locationList(), function(location) {
         //var city = location.city().toLowerCase();
         var title = location.title().toLowerCase();
-        var match = title === searchTitle;
+        var match = title.includes(searchTitle);
         console.log("SEPARATOR --- TIME:" + new Date());
         self.locationList().forEach(function(location) {
           console.log("inside the map marker section --- location.title().toLowerCase() [" + location.title().toLowerCase() + " ]  COMPARED TO searchTitle: [" + searchTitle + "]");
@@ -280,7 +280,7 @@ var ViewModel = function() {
 
         //Injects foursquare API content into HTML page
         marker.setIcon(highlightedIcon);
-        infowindow.setContent('<div id="markerTitle">'+ marker.title +'</div><br><div>From Foursquare: <strong>'+ venueLike +'</strong> people have liked this location and it has been rated <strong>'+ venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +'" target="_blank">Check out this spot on Foursquare</a></div><br><div>(Click icon to reset animation)</div>');
+        infowindow.setContent('<div id="markerTitle">'+ marker.title +'</div><br><div>From Foursquare: <strong>'+ venueLike +'</strong> people have liked this location and it has been rated <strong>'+ venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +'" target="_blank">Check out this spot on Foursquare</a></div>');
         infowindow.open(map, marker);
 
       //Foursquare error handling
