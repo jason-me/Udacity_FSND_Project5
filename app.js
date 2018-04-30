@@ -75,6 +75,8 @@ var ViewModel = function() {
           marker.setAnimation(null);
         } else {
           marker.setAnimation(google.maps.Animation.BOUNCE);
+          //setTimeout(function() from https://www.w3schools.com/jsref/met_win_settimeout.asp
+          setTimeout(function(){ marker.setAnimation(null) }, 700)
         }
       }
 
