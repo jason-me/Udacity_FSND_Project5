@@ -196,15 +196,23 @@ var ViewModel = function() {
       //http://api.jquery.com/jQuery.getJSON/
       $.getJSON(foursquareURL, function(data) {
         var venueLike = data.response.venue.likes.count;
-        var venueRating = data.response.venue.rating;
         var fsUrl = data.response.venue.canonicalUrl;
+
+        //Handling for undefined ratings
+        var venueRating = function() {
+          if (data.response.venue.rating === "" || data.response.venue.rating === undefined) {
+            return "no one has rated this location.";
+          } else {
+            return "has a " + data.response.venue.rating + " out of 10 rating." ;
+          }
+        };
 
         //Injects foursquare API content into HTML page
         marker.setIcon(highlightedIcon);
         infowindow.setContent('<div id="markerTitle">'+ marker.title +
             '</div><br><div>From Foursquare: <strong>'+ venueLike +
-            '</strong> people have liked this location and it has been rated <strong>'+
-             venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +
+            '</strong> people have liked this location and <strong>'+
+             venueRating() +'</strong></div><br><div><a href="'+ fsUrl +
              '" target="_blank">Check out this spot on Foursquare</a></div>');
         infowindow.open(map, marker);
 
