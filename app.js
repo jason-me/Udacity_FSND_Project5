@@ -189,7 +189,8 @@ var ViewModel = function() {
       var clientSecret = 'Y1KF2YQECOFMW3CBMWQEZ35FDP1AOFX0S1F2NF3JDJ0FNTXG';
       var version ='20180417';
       var venueID = marker.id;
-      var foursquareURL = 'https://api.foursquare.com/v2/venues/'+ venueID +'?&client_id='+ clientID +'&client_secret='+ clientSecret +'&v='+ version;
+      var foursquareURL = 'https://api.foursquare.com/v2/venues/'+ venueID +
+          '?&client_id='+ clientID +'&client_secret='+ clientSecret +'&v='+ version;
 
       //Load JSON-encoded data from the server using a GET HTTP Ajaxrequest.
       //http://api.jquery.com/jQuery.getJSON/
@@ -200,7 +201,11 @@ var ViewModel = function() {
 
         //Injects foursquare API content into HTML page
         marker.setIcon(highlightedIcon);
-        infowindow.setContent('<div id="markerTitle">'+ marker.title +'</div><br><div>From Foursquare: <strong>'+ venueLike +'</strong> people have liked this location and it has been rated <strong>'+ venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +'" target="_blank">Check out this spot on Foursquare</a></div>');
+        infowindow.setContent('<div id="markerTitle">'+ marker.title +
+            '</div><br><div>From Foursquare: <strong>'+ venueLike +
+            '</strong> people have liked this location and it has been rated <strong>'+
+             venueRating +'</strong>/ 10.</div><br><div><a href="'+ fsUrl +
+             '" target="_blank">Check out this spot on Foursquare</a></div>');
         infowindow.open(map, marker);
 
       //Foursquare error handling

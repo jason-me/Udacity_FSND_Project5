@@ -13,7 +13,7 @@ How to Run Project
 
 Description
 
-    This program utilizes a number of frameworks to show a map of local disc golf courses in central texas.
+    This program utilizes Knockout, JQuery, and Bootstrap frameworks as well as a simple-slider to show a map of local disc golf courses in central texas. Google Maps Places API and Fourquare APIs are used to fetch map and map data.
 
 References
 
