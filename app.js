@@ -1,4 +1,3 @@
-// CURRENT WORKING ENVIRONMENT - MONDAY APRIL 30, 2018
 //Begin View in MVVM
 var initLocations = [
           {title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a', city: 'round rock'},
@@ -21,7 +20,8 @@ var Location = function(data) {
   this.marker = data.marker;
 };
 
-    //Toggle menu
+    //Toggle menu from simple sidebar
+    //https://startbootstrap.com/template-overviews/simple-sidebar/
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
@@ -105,7 +105,6 @@ var ViewModel = function() {
 
       //Shows all list items and markers when selected
       if (searchTitle === '') {
-        console.log("searchtitle WAS EMPTY STRING");
         self.locationList().forEach(function(location) {
           if (location.marker) {
             location.marker.setVisible(true);
@@ -145,7 +144,6 @@ var ViewModel = function() {
 
       //Filters the list and markers selected.
       return ko.utils.arrayFilter(self.locationList(), function(location) {
-        console.log("SEPARATOR ======================================== --- TIME:" + new Date());
         //var city = location.city().toLowerCase();
         var title = location.title().toLowerCase();
         var match = title.includes(searchTitle.toLowerCase());
@@ -184,9 +182,8 @@ var ViewModel = function() {
   }
 
   //Populate infowindow with content
-  console.log("populateInfoWindow is about to be declared... clearly this code line is called first though");
   function populateInfoWindow(marker, infowindow) {
-    console.log("INSIDE populateInfoWindow");
+
       //Foursquare API implementation
       var clientID = '1TTRU30VHJFEHTQIAHSEOCJAMFT5AIC0MVYQ54ONFD1UXVEJ';
       var clientSecret = 'Y1KF2YQECOFMW3CBMWQEZ35FDP1AOFX0S1F2NF3JDJ0FNTXG';
@@ -208,10 +205,8 @@ var ViewModel = function() {
 
       //Foursquare error handling
       }).fail(function() {alert('Foursquare could not be loaded...');});
-      console.log("got to the end of the scope of populateInfoWindow............");
     }
 
-  //console.log("HOW ON EARTH is this even runnning..........");
   //Connects location to the marker
   this.currentLocation = function(location) {
     google.maps.event.trigger(this.marker, 'click');
