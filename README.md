@@ -1,9 +1,10 @@
 Udacity_FSND_Project5 - Neighborhood Map -- Central Texas Disc Golf by Jason M. Hester
 
 ==============================
+
 Required Libraries and Dependencies
 
-This program utilizes Knockout, JQuery, and Bootstrap js libraries.
+    This program utilizes Knockout, JQuery, and Bootstrap js libraries.
 
 How to Run Project
 
