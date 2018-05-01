@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/simple-sidebar.css">
 </head>
-<body><!-- CURRENT WORKING ENVIRONMENT - SUNDAY  APRIL 29, 2018 -->
+<body><!-- CURRENT WORKING ENVIRONMENT - MONDAY  APRIL 30, 2018 -->
         <div id="wrapper">
             <div id="sidebar-wrapper">
                 <ul class="sidebar-nav">
@@ -18,22 +18,8 @@
                     </li>
                     <li>
                         <label for id="search" class="filter_btn">Search</label>
-                        <!-- <div class="search-bar"> -->
-            <!-- <input id="search" list="placeList" data-bind="value: searchTitle, valueUpdate: 'afterkeydown', event: { keyup: searchModifier }" placeholder="search for popular places"> -->
                         <input id="search" name="filter" class="filter_input" data-bind="value: searchTitle, valueUpdate: 'afterkeydown', event: { keyup: filteredLocations }" placeholder="search popular courses">
-            <!-- <button class="search-button">Search</button> -->
-        <!-- </div> -->
                     </li>
-<!--        <div class="filter">
-            <h3 id="filterHeader">Locations Near:</h3>
-            <label><input type="radio" name="city" checked value="all" data-bind="checked: selectedCity" /> All</label><br>
-            <label><input type="radio" name="city" value="round rock" data-bind="checked: selectedCity" /> Round Rock</label><br>
-            <label><input type="radio" name="city" value="georgetown" data-bind="checked: selectedCity" /> Georgetown</label><br>
-            <label><input type="radio" name="city" value="pflugerville" data-bind="checked: selectedCity" /> Pflugerville</label><br>
-            <label><input type="radio" name="city" value="austin" data-bind="checked: selectedCity" /> Austin</label><br>
-        </div><br>
--->
-
         <div id="filteredLocations-wrapper">
             <ul data-bind="foreach: filteredLocations">
                 <li>
