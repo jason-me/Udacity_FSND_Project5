@@ -2,17 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Disc Golf Near Round Rock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Central Texas Disc Golf</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/simple-sidebar.css">
 </head>
 <body><!-- CURRENT WORKING ENVIRONMENT - SUNDAY  APRIL 29, 2018 -->
-        <div>
-        <h1 id="name">Disc Golf In Central Texas</h1>
-        <div class="search-bar">
+        <div id="wrapper">
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav">
+                    <li class="sidebar-brand">
+                        <h2>Regional Disc Golf Courses</h2>
+                    </li>
+                    <li>
+                        <label for id="search" class="filter_btn">Search</label>
+                        <!-- <div class="search-bar"> -->
             <!-- <input id="search" list="placeList" data-bind="value: searchTitle, valueUpdate: 'afterkeydown', event: { keyup: searchModifier }" placeholder="search for popular places"> -->
-            <input id="search" data-bind="value: searchTitle, valueUpdate: 'afterkeydown', event: { keyup: filteredLocations }" placeholder="search for popular places">
+                        <input id="search" name="filter" class="filter_input" data-bind="value: searchTitle, valueUpdate: 'afterkeydown', event: { keyup: filteredLocations }" placeholder="search popular courses">
             <!-- <button class="search-button">Search</button> -->
-        </div>
+        <!-- </div> -->
+                    </li>
 <!--        <div class="filter">
             <h3 id="filterHeader">Locations Near:</h3>
             <label><input type="radio" name="city" checked value="all" data-bind="checked: selectedCity" /> All</label><br>
@@ -22,19 +34,37 @@
             <label><input type="radio" name="city" value="austin" data-bind="checked: selectedCity" /> Austin</label><br>
         </div><br>
 -->
-        <div id="listContainer">
+
+        <div id="filteredLocations-wrapper">
             <ul data-bind="foreach: filteredLocations">
-                <li><a href="#" data-bind="text: title, click: $root.currentLocation"></a></li>
+                <li>
+                    <a href="#" data-bind="text: title, click: $root.currentLocation"></a>
+                </li>
             </ul>
         </div>
-    <div class="mapContainer">
-    <div id="map"></div>
+    </ul>
+</div>
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <header class="row">
+            <a class="btn btn-secondary pointer" id="menu-toggle">
+                <div class="hamburger"></div>
+                <div class="hamburger"></div>
+                <div class="hamburger"></div>
+            </a>
+            <h1>Disc Golf Locations in Central Texas</h1>
+        </header>
+        <section class="row">
+            <div id="map"></div>
+        </section>
     </div>
+</div>
 </div>
     <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCB2vFmdjvFknoGHf2LxAtFPp-SvU1bIGg&v=3&callback=initMap" onerror="googleError()">
     </script>
     <script src="bower_components/knockout-3.4.2.js" defer></script>
     <script src="bower_components/jquery-3.3.1.min.js" defer></script>
+    <script src="bower_components/bootstrap.bundle.min.js" defer></script>
     <script src="app.js" defer></script>
 </body>
 </html>

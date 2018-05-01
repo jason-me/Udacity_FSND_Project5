@@ -21,6 +21,11 @@ var Location = function(data) {
   this.marker = data.marker;
 };
 
+    // toggle menu
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
 
 //Initialize Google Map and View Model
 var map;
