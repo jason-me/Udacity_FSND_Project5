@@ -3,8 +3,8 @@
 var initLocations = [
           {title: 'Old Settlers Park Disc Golf', position: {lat: 30.5410321, lng: -97.62581109999999}, FSID: '4c32511a7cc0c9b6871df09a', city: 'round rock'},
           {title: 'Cat Hollow Disc Golf', position: {lat: 30.5064047, lng: -97.7304463}, FSID: '4c13eb38a9c220a17faa569d', city: 'round rock'},
-          {title: 'Falcon Pointe Disc Golf Course', position: {lat: 30.458378, lng: -97.5849549}, FSID: '4cafa62c1463a143934b96a9', city: 'pflugerville'},
-          {title: 'Wells Branch Disc Golf Course', position: {lat: 30.4342523, lng: -97.6712814}, FSID:'4ce72ffd8ef78cfa54b9919b', city: 'austin'},
+          {title: 'Cat Falcon Pointe Disc Golf Course', position: {lat: 30.458378, lng: -97.5849549}, FSID: '4cafa62c1463a143934b96a9', city: 'pflugerville'},
+          {title: 'Cat Wells Branch Disc Golf Course', position: {lat: 30.4342523, lng: -97.6712814}, FSID:'4ce72ffd8ef78cfa54b9919b', city: 'austin'},
           {title: 'Williamson County Disc Golf Course', position: {lat: 30.561017, lng: -97.7669112}, FSID: '4bc0eaf0461576b0880d7b32', city: 'round rock'},
           {title: 'San Gabriel Disc Golf Course', position: {lat: 30.6332618, lng: -97.6779842}, FSID: '4aee1fb8f964a5204dd221e3', city: 'georgetown'},
           {title: 'Rivery Park Disc Golf Course', position: {lat: 30.5282057, lng: -97.6925576}, FSID: '4cb60ad764998cfa4d6912a2', city: 'georgetown'},
@@ -81,7 +81,7 @@ var ViewModel = function() {
         } else {
           marker.setAnimation(google.maps.Animation.BOUNCE);
           //setTimeout(function() from https://www.w3schools.com/jsref/met_win_settimeout.asp
-          setTimeout(function(){ marker.setAnimation(null) }, 700)
+          setTimeout(function(){ marker.setAnimation(null) }, 700);
         }
       }
 
@@ -89,7 +89,7 @@ var ViewModel = function() {
   });
 
 
-  console.log("alpha001");
+  console.log("alpha001-Beta");
   console.log("this ---> " + JSON.stringify(this));
   console.log("this.locationList = " + JSON.stringify(this.locationList));
 
@@ -105,10 +105,8 @@ var ViewModel = function() {
   self.searchTitle = ko.observable('');
 
   //Create filteredlocations binding in KO
-  self.filteredLocations = ko.pureComputed(function(){
-
-
-    //debugger;
+  self.filteredLocations = ko.computed({
+    read: function() {
 
       console.log("IS THIS GETTING CALLED??? - SELF.FILTEREDLOCATIONS");
       //var selectedCity = self.selectedCity().toLowerCase();
@@ -130,15 +128,29 @@ var ViewModel = function() {
 
       //Filters the list and markers selected.
       return ko.utils.arrayFilter(self.locationList(), function(location) {
+        console.log("SEPARATOR ======================================== --- TIME:" + new Date());
         //var city = location.city().toLowerCase();
         var title = location.title().toLowerCase();
-        var match = title.includes(searchTitle);
-        console.log("SEPARATOR --- TIME:" + new Date());
+        var match = title.includes(searchTitle.toLowerCase()); // FAILURE: MARKER NOT SHOWING UP
+        //var match = (title.indexOf(searchTitle) > -1) ? true : false;  // TODO: use ltrim and rtrim
+        //var match = title === searchTitle; // THIS WORKS (BUT REQUIRES FULL TITLE)
+
+        //console.log("title:[" + title + "] searchTitle:[" + searchTitle + "]   ---> title.indexOf(searchTitle):   " + title.indexOf(searchTitle));
+        //console.log(" match result:  -----> " + match);
+
         self.locationList().forEach(function(location) {
-          console.log("inside the map marker section --- location.title().toLowerCase() [" + location.title().toLowerCase() + " ]  COMPARED TO searchTitle: [" + searchTitle + "]");
-          if (location.title().toLowerCase() === searchTitle) {
+          //console.log("inside the map marker section --- location.title().toLowerCase() [" + location.title().toLowerCase() + " ]  COMPARED TO searchTitle: [" + searchTitle + "]");
+          //if (location.title().toLowerCase() === searchTitle) {
+          //if (title.indexOf(searchTitle) > -1) {
+          //if (true) {
+          ////var marker__title = location.title().toLowerCase();
+          ////var marker__searchTitle = searchTitle.toLowerCase();
+          ////console.log("***** MARKER RELATED ---->  DOES [" + marker__title + "]  INCLUDE  [" + marker__searchTitle + "]");
+          if (location.title().toLowerCase().includes(searchTitle.toLowerCase())) {
+            ////console.log("          marker RESULT: " + "yes -- true");
             location.marker.setVisible(true);
           } else {
+            ////console.log("          marker RESULT: " + "no -- false ");
             location.marker.setVisible(false);
             infoWindow.close();
           }
@@ -146,7 +158,61 @@ var ViewModel = function() {
         return match;
       });
 
+  },
 
+    write: function() {
+
+      console.log("IS THIS GETTING CALLED??? - SELF.FILTEREDLOCATIONS");
+      //var selectedCity = self.selectedCity().toLowerCase();
+      var searchTitle = self.searchTitle().toLowerCase();
+      console.log("searchTitle = [" + searchTitle + "]");
+
+
+      //Shows all list items and markers when selected
+      if (searchTitle === '') {
+        console.log("searchtitle WAS EMPTY STRING");
+        self.locationList().forEach(function(location) {
+          if (location.marker) {
+            location.marker.setVisible(true);
+          }
+        });
+        return self.locationList();
+      }
+
+
+      //Filters the list and markers selected.
+      return ko.utils.arrayFilter(self.locationList(), function(location) {
+        console.log("SEPARATOR ======================================== --- TIME:" + new Date());
+        //var city = location.city().toLowerCase();
+        var title = location.title().toLowerCase();
+        var match = title.includes(searchTitle.toLowerCase()); // FAILURE: MARKER NOT SHOWING UP
+        //var match = (title.indexOf(searchTitle) > -1) ? true : false;  // TODO: use ltrim and rtrim
+        //var match = title === searchTitle; // THIS WORKS (BUT REQUIRES FULL TITLE)
+
+        //console.log("title:[" + title + "] searchTitle:[" + searchTitle + "]   ---> title.indexOf(searchTitle):   " + title.indexOf(searchTitle));
+        //console.log(" match result:  -----> " + match);
+
+        self.locationList().forEach(function(location) {
+          //console.log("inside the map marker section --- location.title().toLowerCase() [" + location.title().toLowerCase() + " ]  COMPARED TO searchTitle: [" + searchTitle + "]");
+          //if (location.title().toLowerCase() === searchTitle) {
+          //if (title.indexOf(searchTitle) > -1) {
+          //if (true) {
+          ////var marker__title = location.title().toLowerCase();
+          ////var marker__searchTitle = searchTitle.toLowerCase();
+          ////console.log("***** MARKER RELATED ---->  DOES [" + marker__title + "]  INCLUDE  [" + marker__searchTitle + "]");
+          if (location.title().toLowerCase().includes(searchTitle.toLowerCase())) {
+            ////console.log("          marker RESULT: " + "yes -- true");
+            location.marker.setVisible(true);
+          } else {
+            ////console.log("          marker RESULT: " + "no -- false ");
+            location.marker.setVisible(false);
+            infoWindow.close();
+          }
+        });
+        return match;
+      });
+
+    }
   });
 
 /*  BACKUP!
